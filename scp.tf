@@ -18,11 +18,20 @@ module "scp_ou" {
   # Applies to accounts that are not managing IAM users
   deny_creating_iam_users = true
 
+  # Protect OrganizationAccountAccessRole
+  protect_iam_roles = true
+  protect_iam_role_resources = [
+    "arn:aws:iam::*:role/Admin"
+  ]
+
   # Deny deleting Route53 zones
   deny_deleting_route53_zones = false
 
   # Deny deleting CloudWatch logs
   deny_deleting_cloudwatch_logs = false
+
+  # Deny access to the root user
+  deny_root_account = true
 
   # Restrict EC2 instance types
   limit_ec2_instance_types   = false
@@ -38,6 +47,12 @@ module "scp_ou" {
 
   # Require S3 Objects to be Encrypted (Encryption at rest)
   require_s3_encryption = false
+
+  protect_s3_buckets = true
+  # protect terraform statefile bucket
+  protect_s3_bucket_resources = [
+    "arn:aws:s3:::*/*"
+  ]
 
   # Require MFA S3 Delete
   require_mfa_delete = false
